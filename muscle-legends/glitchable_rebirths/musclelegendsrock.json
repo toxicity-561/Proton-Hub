@@ -1,7 +1,7 @@
 [
     {
         "nameOfRock": "Muscle Legends Rock",
-        "rebirths": 0
+        "rebirths": 0,
         "expGain": 250,
         "pets": [
             {
@@ -64,101 +64,261 @@
         ]
     },
     {
-    "nameOfRock": "Muscle Legends Rock",
-    "rebirths": 4,
-    "expGain": 300,
-    "pets": [
-      { "level": 2, "rarity": "Basic", "expNeeded": 200 },
-      { "level": 2, "rarity": "Uncommon", "expNeeded": 200 },
-      { "level": 1, "rarity": "Rare", "expNeeded": 450 },
-      { "level": 1, "rarity": "Epic", "expNeeded": 700 },
-      { "level": 1, "rarity": "Unique", "expNeeded": 950 }
-    ]
-  },
-  {
-    "nameOfRock": "Muscle Legends Rock",
-    "rebirths": 6,
-    "expGain": 325,
-    "pets": [
-      { "level": 2, "rarity": "Basic", "expNeeded": 175 },
-      { "level": 2, "rarity": "Uncommon", "expNeeded": 175 },
-      { "level": 2, "rarity": "Rare", "expNeeded": 425 },
-      { "level": 1, "rarity": "Epic", "expNeeded": 675 },
-      { "level": 1, "rarity": "Unique", "expNeeded": 925 }
-    ]
-  },
-  {
-    "nameOfRock": "Muscle Legends Rock",
-    "rebirths": 8,
-    "expGain": 350,
-    "pets": [
-      { "level": 2, "rarity": "Basic", "expNeeded": 150 },
-      { "level": 2, "rarity": "Uncommon", "expNeeded": 150 },
-      { "level": 2, "rarity": "Rare", "expNeeded": 400 },
-      { "level": 2, "rarity": "Epic", "expNeeded": 650 },
-      { "level": 1, "rarity": "Unique", "expNeeded": 900 }
-    ]
-  },
-  {
-    "nameOfRock": "Muscle Legends Rock",
-    "rebirths": 10,
-    "expGain": 375,
-    "pets": [
-      { "level": 2, "rarity": "Basic", "expNeeded": 125 },
-      { "level": 2, "rarity": "Uncommon", "expNeeded": 125 },
-      { "level": 2, "rarity": "Rare", "expNeeded": 375 },
-      { "level": 2, "rarity": "Epic", "expNeeded": 625 },
-      { "level": 2, "rarity": "Unique", "expNeeded": 875 }
-    ]
-  },
-  {
-    "nameOfRock": "Muscle Legends Rock",
-    "rebirths": 12,
-    "expGain": 400,
-    "pets": [
-      { "level": 2, "rarity": "Basic", "expNeeded": 100 },
-      { "level": 2, "rarity": "Uncommon", "expNeeded": 100 },
-      { "level": 2, "rarity": "Rare", "expNeeded": 350 },
-      { "level": 2, "rarity": "Epic", "expNeeded": 600 },
-      { "level": 2, "rarity": "Unique", "expNeeded": 850 }
-    ]
-  },
-  {
-    "nameOfRock": "Muscle Legends Rock",
-    "rebirths": 14,
-    "expGain": 425,
-    "pets": [
-      { "level": 2, "rarity": "Basic", "expNeeded": 75 },
-      { "level": 2, "rarity": "Uncommon", "expNeeded": 75 },
-      { "level": 2, "rarity": "Rare", "expNeeded": 325 },
-      { "level": 2, "rarity": "Epic", "expNeeded": 575 },
-      { "level": 2, "rarity": "Unique", "expNeeded": 825 }
-    ]
-  },
-  {
-    "nameOfRock": "Muscle Legends Rock",
-    "rebirths": 16,
-    "expGain": 450,
-    "pets": [
-      { "level": 2, "rarity": "Basic", "expNeeded": 50 },
-      { "level": 2, "rarity": "Uncommon", "expNeeded": 50 },
-      { "level": 2, "rarity": "Rare", "expNeeded": 300 },
-      { "level": 2, "rarity": "Epic", "expNeeded": 550 },
-      { "level": 2, "rarity": "Unique", "expNeeded": 800 }
-    ]
-  },
-  {
-    "nameOfRock": "Muscle Legends Rock",
-    "rebirths": 20,
-    "expGain": 500,
-    "pets": [
-      { "level": 3, "rarity": "Basic", "expNeeded": 0 },
-      { "level": 2, "rarity": "Uncommon", "expNeeded": 0 },
-      { "level": 2, "rarity": "Rare", "expNeeded": 250 },
-      { "level": 2, "rarity": "Epic", "expNeeded": 500 },
-      { "level": 2, "rarity": "Unique", "expNeeded": 750 }
-    ]
-  }
+        "nameOfRock": "Muscle Legends Rock",
+        "rebirths": 4,
+        "expGain": 300,
+        "pets": [
+            {
+                "level": 2,
+                "rarity": "Basic",
+                "expNeeded": 200
+            },
+            {
+                "level": 2,
+                "rarity": "Uncommon",
+                "expNeeded": 200
+            },
+            {
+                "level": 1,
+                "rarity": "Rare",
+                "expNeeded": 450
+            },
+            {
+                "level": 1,
+                "rarity": "Epic",
+                "expNeeded": 700
+            },
+            {
+                "level": 1,
+                "rarity": "Unique",
+                "expNeeded": 950
+            }
+        ]
+    },
+    {
+        "nameOfRock": "Muscle Legends Rock",
+        "rebirths": 6,
+        "expGain": 325,
+        "pets": [
+            {
+                "level": 2,
+                "rarity": "Basic",
+                "expNeeded": 175
+            },
+            {
+                "level": 2,
+                "rarity": "Uncommon",
+                "expNeeded": 175
+            },
+            {
+                "level": 2,
+                "rarity": "Rare",
+                "expNeeded": 425
+            },
+            {
+                "level": 1,
+                "rarity": "Epic",
+                "expNeeded": 675
+            },
+            {
+                "level": 1,
+                "rarity": "Unique",
+                "expNeeded": 925
+            }
+        ]
+    },
+    {
+        "nameOfRock": "Muscle Legends Rock",
+        "rebirths": 8,
+        "expGain": 350,
+        "pets": [
+            {
+                "level": 2,
+                "rarity": "Basic",
+                "expNeeded": 150
+            },
+            {
+                "level": 2,
+                "rarity": "Uncommon",
+                "expNeeded": 150
+            },
+            {
+                "level": 2,
+                "rarity": "Rare",
+                "expNeeded": 400
+            },
+            {
+                "level": 2,
+                "rarity": "Epic",
+                "expNeeded": 650
+            },
+            {
+                "level": 1,
+                "rarity": "Unique",
+                "expNeeded": 900
+            }
+        ]
+    },
+    {
+        "nameOfRock": "Muscle Legends Rock",
+        "rebirths": 10,
+        "expGain": 375,
+        "pets": [
+            {
+                "level": 2,
+                "rarity": "Basic",
+                "expNeeded": 125
+            },
+            {
+                "level": 2,
+                "rarity": "Uncommon",
+                "expNeeded": 125
+            },
+            {
+                "level": 2,
+                "rarity": "Rare",
+                "expNeeded": 375
+            },
+            {
+                "level": 2,
+                "rarity": "Epic",
+                "expNeeded": 625
+            },
+            {
+                "level": 2,
+                "rarity": "Unique",
+                "expNeeded": 875
+            }
+        ]
+    },
+    {
+        "nameOfRock": "Muscle Legends Rock",
+        "rebirths": 12,
+        "expGain": 400,
+        "pets": [
+            {
+                "level": 2,
+                "rarity": "Basic",
+                "expNeeded": 100
+            },
+            {
+                "level": 2,
+                "rarity": "Uncommon",
+                "expNeeded": 100
+            },
+            {
+                "level": 2,
+                "rarity": "Rare",
+                "expNeeded": 350
+            },
+            {
+                "level": 2,
+                "rarity": "Epic",
+                "expNeeded": 600
+            },
+            {
+                "level": 2,
+                "rarity": "Unique",
+                "expNeeded": 850
+            }
+        ]
+    },
+    {
+        "nameOfRock": "Muscle Legends Rock",
+        "rebirths": 14,
+        "expGain": 425,
+        "pets": [
+            {
+                "level": 2,
+                "rarity": "Basic",
+                "expNeeded": 75
+            },
+            {
+                "level": 2,
+                "rarity": "Uncommon",
+                "expNeeded": 75
+            },
+            {
+                "level": 2,
+                "rarity": "Rare",
+                "expNeeded": 325
+            },
+            {
+                "level": 2,
+                "rarity": "Epic",
+                "expNeeded": 575
+            },
+            {
+                "level": 2,
+                "rarity": "Unique",
+                "expNeeded": 825
+            }
+        ]
+    },
+    {
+        "nameOfRock": "Muscle Legends Rock",
+        "rebirths": 16,
+        "expGain": 450,
+        "pets": [
+            {
+                "level": 2,
+                "rarity": "Basic",
+                "expNeeded": 50
+            },
+            {
+                "level": 2,
+                "rarity": "Uncommon",
+                "expNeeded": 50
+            },
+            {
+                "level": 2,
+                "rarity": "Rare",
+                "expNeeded": 300
+            },
+            {
+                "level": 2,
+                "rarity": "Epic",
+                "expNeeded": 550
+            },
+            {
+                "level": 2,
+                "rarity": "Unique",
+                "expNeeded": 800
+            }
+        ]
+    },
+    {
+        "nameOfRock": "Muscle Legends Rock",
+        "rebirths": 20,
+        "expGain": 500,
+        "pets": [
+            {
+                "level": 3,
+                "rarity": "Basic",
+                "expNeeded": 0
+            },
+            {
+                "level": 2,
+                "rarity": "Uncommon",
+                "expNeeded": 0
+            },
+            {
+                "level": 2,
+                "rarity": "Rare",
+                "expNeeded": 250
+            },
+            {
+                "level": 2,
+                "rarity": "Epic",
+                "expNeeded": 500
+            },
+            {
+                "level": 2,
+                "rarity": "Unique",
+                "expNeeded": 750
+            }
+        ]
+    }, 
     {
         "nameOfRock": "Muscle Legends Rock",
         "rebirths": 22
