@@ -2,6 +2,34 @@
     {
         "nameOfRock": "Muscle Legends Rock",
         "rebirths": 0
+        "expGain": 250,
+        "pets": [
+            {
+                "level": 1,
+                "rarity": "Basic",
+                "expNeeded": 0
+            },
+            {
+                "level": 1,
+                "rarity": "Uncommon",
+                "expNeeded": 250
+            },
+            {
+                "level": 1,
+                "rarity": "Rare",
+                "expNeeded": 500
+            },
+            {
+                "level": 1,
+                "rarity": "Epic",
+                "expNeeded": "750"
+            },
+            {
+                "level": 1,
+                "rarity": "Unique",
+                "expNeeded": "1000"
+            }
+        ]
     },
     {
         "nameOfRock": "Muscle Legends Rock",
