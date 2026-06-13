@@ -283,7 +283,6 @@ function PROTONUI:SetNotification(Config)
 		TextYAlignment = Enum.TextYAlignment.Top,
 		BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 		BackgroundTransparency = 0.999,
-		TextColor3 = Color3.fromRGB(150, 150, 150),
 		BorderColor3 = Color3.fromRGB(0, 0, 0),
 		BorderSizePixel = 0,
 		Position = UDim2.new(0, 10, 0, 27),
@@ -321,12 +320,71 @@ function PROTONUI:SetNotification(Config)
 	Notification:Close()
 	return Notification
 end
+local THEMES = {
+	["Proton"] = {
+		accent = Color3.fromRGB(59, 226, 205),
+		bg = Color3.fromRGB(13, 41, 39),
+		snowFalling = false
+	},
+	["Snow"] = {
+		accent = Color3.fromRGB(224, 224, 224),
+		bg = Color3.fromRGB(200, 200, 200),
+		snowFalling = false
+	},
+	["Sunset"] = {
+		accent = Color3.fromRGB(255, 107, 53),
+		bg = Color3.fromRGB(26, 15, 10),
+		snowFalling = false
+	},
+	["Ocean"] = {
+		accent = Color3.fromRGB(0, 150, 200),
+		bg = Color3.fromRGB(10, 30, 50),
+		snowFalling = false
+	},
+	["Forest"] = {
+		accent = Color3.fromRGB(76, 175, 80),
+		bg = Color3.fromRGB(15, 35, 20),
+		snowFalling = false
+	},
+	["Midnight"] = {
+		accent = Color3.fromRGB(138, 43, 226),
+		bg = Color3.fromRGB(20, 10, 35),
+		snowFalling = false
+	},
+	["Lava"] = {
+		accent = Color3.fromRGB(255, 69, 0),
+		bg = Color3.fromRGB(40, 10, 5),
+		snowFalling = false
+	},
+	["AMOLED BLACK"] = {
+		accent = Color3.fromRGB(255, 255, 255),
+		bg = Color3.fromRGB(0, 0, 0),
+		snowFalling = false
+	},
+	["Snow Custom Theme"] = {
+		accent = Color3.fromRGB(135, 206, 250),
+		bg = Color3.fromRGB(25, 25, 112),
+		snowFalling = true
+	},
+	["Johny Custom Theme"] = {
+		accent = Color3.fromRGB(88, 0, 216),
+		bg = Color3.fromRGB(157, 90, 255),
+		snowFalling = false
+	}
+}
+local FONTSTABLE = {
+	["GothamBold"] = Enum.Font.GothamBold,
+	["Gotham"] = Enum.Font.Gotham,
+	["Arial"] = Enum.Font.Arial,
+	["ArialBold"] = Enum.Font.ArialBold,
+	["Oswald"] = Enum.Font.Oswald,
+	["Ubuntu"] = Enum.Font.Ubuntu,
+}
 function PROTONUI:CreateWindow(Config)
 	local Title = Config[1] or Config.Title or ""
 	local Description = Config[2] or Config.Description or ""
 	local TabWidth = Config[3] or Config["Tab Width"] or 120
 	local SizeUi = Config[4] or Config.SizeUi or UDim2.fromOffset(550, 315)
-	local Funcs = {}
 	local ProtonUIGui = Custom:Create("ScreenGui", {
 		ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 	}, RunService:IsStudio() and Player.PlayerGui or (gethui() or cloneref(game:GetService("CoreGui")) or game:GetService("CoreGui")))
@@ -505,7 +563,7 @@ function PROTONUI:CreateWindow(Config)
 		EasingStyle = Enum.EasingStyle.Quad
 	}, LayersFolder)
 	local ScrollTab = Custom:Create("ScrollingFrame", {
-		CanvasSize = UDim2.new(0, 0, 2.10000002, 0),
+		CanvasSize = UDim2.new(0, 0, 2.1, 0),
 		ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0),
 		ScrollBarThickness = 0,
 		Active = true,
@@ -555,9 +613,6 @@ function PROTONUI:CreateWindow(Config)
 	end)
 	DropShadowHolder.Size = UDim2.new(0, 115 + TextLabel.TextBounds.X + 1 + TextLabel1.TextBounds.X, 0, 350)
 	MakeDraggable(Top, DropShadowHolder)
-
-
-  -- /// Blur
 	local MoreBlur = Custom:Create("Frame", {
 		AnchorPoint = Vector2.new(1, 1),
 		BackgroundColor3 = Color3.fromRGB(0, 0, 0),
@@ -665,12 +720,123 @@ function PROTONUI:CreateWindow(Config)
 		Name = "DropPageLayout",
 		Parent = DropdownFolder
 	})
-
-  -- /// Create Tab
-	local Tabs = {}
+	local function applyTheme(accent, bg)
+		Custom.ColorRGB = accent
+		Custom.BackgroundRGB = bg
+		for _, v in pairs(ProtonUIGui:GetDescendants()) do
+			if v.Name == "TextLabel1" then
+				v.TextColor3 = accent
+				local stroke = v:FindFirstChild("UIStroke")
+				if stroke then
+					stroke.Color = accent
+				end
+			elseif v.Name == "ChooseFrame" or v.Name == "SliderInput" or v.Name == "SliderDraggable" or v.Name == "SliderCircle" or v.Name == "GameLinkButton" or v.Name == "PlaceIdButton" or v.Name == "Tag" then
+				v.BackgroundColor3 = accent
+				local stroke = v:FindFirstChild("UIStroke")
+				if stroke then
+					stroke.Color = accent
+				end
+			elseif v.Name == "SectionDecideFrame" or v.Name == "UIstrokinggg" then
+				local gradient = v:FindFirstChild("UIGradient")
+				if gradient then
+					gradient.Color = ColorSequence.new{
+						ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 20, 20)),
+						ColorSequenceKeypoint.new(0.5, accent),
+						ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 20))
+					}
+				end
+			elseif v.Name == "Main" or v.Name == "DropdownSelect" then
+				v.BackgroundColor3 = bg
+			end
+		end
+	end
+	local function applySnowFalling(shouldSnow)
+		local MainFrame = ProtonUIGui:FindFirstChild("DropShadowHolder"):FindFirstChild("DropShadow"):FindFirstChild("Main")
+		if not MainFrame then
+			return
+		end
+		local existingSnow = MainFrame:FindFirstChild("SnowContainer")
+		if existingSnow then
+			existingSnow:Destroy()
+		end
+		if shouldSnow then
+			local SnowContainer = Custom:Create("Frame", {
+				Name = "SnowContainer",
+				BackgroundTransparency = 1,
+				BorderSizePixel = 0,
+				Size = UDim2.new(1, 0, 1, 0),
+				ZIndex = 1,
+				Parent = MainFrame
+			})
+			for i = 1, 28 do
+				local snowflake = Custom:Create("TextLabel", {
+					Text = "❄",
+					TextSize = math.random(10, 20),
+					TextColor3 = Color3.fromRGB(200, 220, 255),
+					BackgroundTransparency = 1,
+					BorderSizePixel = 0,
+					Position = UDim2.new(math.random(0, 100) / 100, 0, - 0.1, 0),
+					Size = UDim2.new(0, 30, 0, 30),
+					ZIndex = 2,
+					Parent = SnowContainer
+				})
+				task.spawn(function()
+					while SnowContainer and SnowContainer.Parent do
+						local tweenInfo = TweenInfo.new(math.random(4, 10), Enum.EasingStyle.Linear)
+						local tween = TweenService:Create(snowflake, tweenInfo, {
+							Position = UDim2.new(math.random(0, 100) / 100, 0, 1.1, 0)
+						})
+						tween:Play()
+						tween.Completed:Wait()
+						snowflake.Position = UDim2.new(math.random(0, 100) / 100, 0, - 0.1, 0)
+					end
+				end)
+			end
+		end
+	end
+	local WindowFunctions = {}
 	local CountTab = 0
 	local CountDropdown = 0
-	function Tabs:CreateTab(Config)
+	function WindowFunctions:MakeTag(Config)
+		local TagTitle = Config[1] or Config.Title or "Tag"
+		local HasBorder = Config[2] or Config.Border or false
+		local Tag = Custom:Create("Frame", {
+			BackgroundColor3 = Custom.ColorRGB,
+			BackgroundTransparency = 0.1,
+			BorderColor3 = Color3.fromRGB(0, 0, 0),
+			BorderSizePixel = 0,
+			Size = UDim2.new(0, 60, 0, 20),
+			Name = "Tag",
+			LayoutOrder = 999,
+			AnchorPoint = Vector2.new(1, 0.5),
+			Position = UDim2.new(1, - 80, 0.5, 0),
+		}, Top)
+		Custom:Create("UICorner", {
+			CornerRadius = UDim.new(0, 12)
+		}, Tag)
+		if HasBorder then
+			Custom:Create("UIStroke", {
+				Color = Custom.BackgroundRGB,
+				Thickness = 1,
+				Name = "UIstrokinggg"
+			}, Tag)
+		end
+		Custom:Create("TextLabel", {
+			Font = Enum.Font.GothamBold,
+			Text = TagTitle,
+			TextColor3 = Color3.fromRGB(255, 255, 255),
+			TextSize = 11,
+			TextXAlignment = Enum.TextXAlignment.Center,
+			TextYAlignment = Enum.TextYAlignment.Center,
+			BackgroundTransparency = 1,
+			BorderSizePixel = 0,
+			Size = UDim2.new(1, - 8, 1, 0),
+			Position = UDim2.new(0, 4, 0, 0),
+			Name = "TagLabel"
+		}, Tag)
+		return Tag
+	end
+	function WindowFunctions:CreateTab(Config)
 		local _Name = Config[1] or Config.Name or ""
 		local Icon = Config[2] or Config.Icon or ""
 		local ScrolLayers = Custom:Create("ScrollingFrame", {
@@ -752,10 +918,11 @@ function PROTONUI:CreateWindow(Config)
 				Position = UDim2.new(0, 2, 0, 9),
 				Size = UDim2.new(0, 1, 0, 12),
 				Name = "ChooseFrame",
-			}, Tab)
+				Parent = Tab
+			})
 			Custom:Create("UIStroke", {
 				Color = Custom.ColorRGB,
-				Thickness = 1.6,
+				Thickness = 1.6
 			}, ChooseFrame)
 			Custom:Create("UICorner", {}, ChooseFrame)
 		end
@@ -781,14 +948,12 @@ function PROTONUI:CreateWindow(Config)
 						}):Play()
 					end
 				end
-				local _TabT = TweenService:Create(Tab, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.InOut), {
+				TweenService:Create(Tab, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.InOut), {
 					BackgroundTransparency = 0.92
-				})
-				local _FTween = TweenService:Create(FrameChoose, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
+				}):Play()
+				TweenService:Create(FrameChoose, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
 					Position = UDim2.new(0, 2, 0, 9 + (33 * Tab.LayoutOrder))
-				})
-				_TabT:Play()
-				_FTween:Play()
+				}):Play()
 				LayersPageLayout:JumpToIndex(Tab.LayoutOrder)
 				task.wait(0.05)
 				NameTab.Text = _Name
@@ -801,12 +966,10 @@ function PROTONUI:CreateWindow(Config)
 				}):Play()
 			end
 		end)
-
-    --- /// Section
 		local Sections, CountSection = {}, 0
-		function Sections:AddSection(Title, OpenSection)
-			local Title = Title or ""
-			local OpenSection = OpenSection or false
+		function Sections:AddSection(SectionTitleString, OpenSection)
+			SectionTitleString = SectionTitleString or ""
+			OpenSection = OpenSection or false
 			local Section = Custom:Create("Frame", {
 				BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 				BackgroundTransparency = 0.999,
@@ -865,9 +1028,9 @@ function PROTONUI:CreateWindow(Config)
 				Size = UDim2.new(1, 6, 1, 6),
 				Name = "FeatureImg"
 			}, FeatureFrame)
-			local SectionTitle = Custom:Create("TextLabel", {
+			local SectionTitleLabel = Custom:Create("TextLabel", {
 				Font = Enum.Font.GothamBold,
-				Text = Title,
+				Text = SectionTitleString,
 				TextColor3 = Color3.fromRGB(230, 230, 230),
 				TextSize = 13,
 				TextXAlignment = Enum.TextXAlignment.Left,
@@ -976,8 +1139,8 @@ function PROTONUI:CreateWindow(Config)
 			UpdateSizeScroll()
 			local Item, ItemCount = {}, 0
 			function Item:AddParagraph(Config)
-				local Title = Config[1] or Config.Title or ""
-				local Content = Config[2] or Config.Content or ""
+				local PTitle = Config[1] or Config.Title or ""
+				local PContent = Config[2] or Config.Content or ""
 				local SettingFuncs = {}
 				local Paragraph = Custom:Create("Frame", {
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
@@ -989,11 +1152,11 @@ function PROTONUI:CreateWindow(Config)
 					Name = "Paragraph",
 				}, SectionAdd)
 				Custom:Create("UICorner", {
-					CornerRadius = UDim.new(0, 4),
+					CornerRadius = UDim.new(0, 4)
 				}, Paragraph)
 				local ParagraphTitle = Custom:Create("TextLabel", {
 					Font = Enum.Font.GothamBold,
-					Text = Title,
+					Text = PTitle,
 					TextColor3 = Color3.fromRGB(231, 231, 231),
 					TextSize = 13,
 					TextXAlignment = Enum.TextXAlignment.Left,
@@ -1007,7 +1170,7 @@ function PROTONUI:CreateWindow(Config)
 				}, Paragraph)
 				local ParagraphContent = Custom:Create("TextLabel", {
 					Font = Enum.Font.GothamBold,
-					Text = Content,
+					Text = PContent,
 					TextColor3 = Color3.fromRGB(255, 255, 255),
 					TextSize = 12,
 					TextTransparency = 0.6,
@@ -1028,17 +1191,16 @@ function PROTONUI:CreateWindow(Config)
 				end
 				UpdateParagraphSize()
 				ParagraphContent:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateParagraphSize)
-				function SettingFuncs:Set(Config)
-					local Title = Config[1] or Config.Title or ""
-					local Content = Config[2] or Config.Content or ""
-					ParagraphTitle.Text = Title
-					ParagraphContent.Text = Content
+				function SettingFuncs:Set(NewConfig)
+					ParagraphTitle.Text = NewConfig[1] or NewConfig.Title or ""
+					ParagraphContent.Text = NewConfig[2] or NewConfig.Content or ""
 					UpdateParagraphSize()
 				end
+				ItemCount += 1
 				return SettingFuncs
 			end
 			function Item:AddSeperator(Config)
-				local Title = Config[1] or Config.Title or ""
+				local SepTitle = Config[1] or Config.Title or ""
 				local Sep_Funcs = {}
 				local Seperator = Custom:Create("Frame", {
 					BackgroundColor3 = Color3.fromRGB(70, 70, 70),
@@ -1051,7 +1213,7 @@ function PROTONUI:CreateWindow(Config)
 				}, SectionAdd)
 				local SeperatorTitle = Custom:Create("TextLabel", {
 					Font = Enum.Font.GothamBold,
-					Text = Title,
+					Text = SepTitle,
 					TextColor3 = Color3.fromRGB(231, 231, 231),
 					TextStrokeColor3 = Color3.fromRGB(0, 0, 0),
 					TextStrokeTransparency = 0.8,
@@ -1066,24 +1228,22 @@ function PROTONUI:CreateWindow(Config)
 					Name = "SeperatorTitle",
 				}, Seperator)
 				Custom:Create("UICorner", {
-					CornerRadius = UDim.new(0, 6),
+					CornerRadius = UDim.new(0, 6)
 				}, Seperator)
-				local Gradient = Custom:Create("UIGradient", {
+				Custom:Create("UIGradient", {
 					Color = ColorSequence.new{
 						ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 120, 120)),
 						ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 120, 120))
 					},
 					Rotation = 90,
 				}, Seperator)
-				function Sep_Funcs:Set(Config)
-					local Title = Config[1] or Config.Title or ""
-					SeperatorTitle.Text = Title
+				function Sep_Funcs:Set(NewConfig)
+					SeperatorTitle.Text = NewConfig[1] or NewConfig.Title or ""
 				end
 				ItemCount += 1
 				return Sep_Funcs
 			end
 			function Item:AddLine()
-				local LineFuncs = {}
 				local Line = Custom:Create("Frame", {
 					BackgroundColor3 = Color3.fromRGB(90, 90, 90),
 					BackgroundTransparency = 0.2,
@@ -1103,15 +1263,96 @@ function PROTONUI:CreateWindow(Config)
 					Rotation = 0,
 				}, Line)
 				ItemCount += 1
-				return LineFuncs
+				return {}
+			end
+			function Item:AddGameDetector(Config)
+				local GamePlaceId = Config[1] or Config.GamePlaceId or ""
+				local GameLink = Config[2] or Config.GameLink or ""
+				local GameName = Config[3] or Config.GameName or ""
+				local SettingFuncs = {}
+				local GameDetector = Custom:Create("Frame", {
+					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+					BackgroundTransparency = 0.935,
+					BorderColor3 = Color3.fromRGB(0, 0, 0),
+					BorderSizePixel = 0,
+					LayoutOrder = ItemCount,
+					Size = UDim2.new(1, 0, 0, 60),
+					Name = "GameDetector",
+				}, SectionAdd)
+				Custom:Create("UICorner", {
+					CornerRadius = UDim.new(0, 4)
+				}, GameDetector)
+				local DetectorTitle = Custom:Create("TextLabel", {
+					Font = Enum.Font.GothamBold,
+					Text = "Game Detected: " .. (GameName ~= "" and GameName or "Unknown"),
+					TextColor3 = Color3.fromRGB(231, 231, 231),
+					TextSize = 13,
+					TextXAlignment = Enum.TextXAlignment.Left,
+					TextYAlignment = Enum.TextYAlignment.Top,
+					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+					BackgroundTransparency = 0.999,
+					BorderSizePixel = 0,
+					Position = UDim2.new(0, 10, 0, 10),
+					Size = UDim2.new(1, - 16, 0, 13),
+					Name = "DetectorTitle",
+				}, GameDetector)
+				local PlaceIdButton = Custom:Create("TextButton", {
+					Font = Enum.Font.GothamBold,
+					Text = "Copy Place ID: " .. GamePlaceId,
+					TextColor3 = Color3.fromRGB(255, 255, 255),
+					TextSize = 11,
+					BackgroundColor3 = Custom.ColorRGB,
+					BackgroundTransparency = 0.2,
+					BorderSizePixel = 0,
+					Position = UDim2.new(0, 10, 0, 28),
+					Size = UDim2.new(0.5, - 8, 0, 25),
+					Name = "PlaceIdButton",
+				}, GameDetector)
+				Custom:Create("UICorner", {
+					CornerRadius = UDim.new(0, 3)
+				}, PlaceIdButton)
+				local GameLinkButton = Custom:Create("TextButton", {
+					Font = Enum.Font.GothamBold,
+					Text = "Copy Game Link",
+					TextColor3 = Color3.fromRGB(255, 255, 255),
+					TextSize = 11,
+					BackgroundColor3 = Custom.ColorRGB,
+					BackgroundTransparency = 0.2,
+					BorderSizePixel = 0,
+					Position = UDim2.new(0, 200, 0, 28),
+					Size = UDim2.new(0.47, - 8, 0, 25),
+					Name = "GameLinkButton",
+				}, GameDetector)
+				Custom:Create("UICorner", {
+					CornerRadius = UDim.new(0, 3)
+				}, GameLinkButton)
+				PlaceIdButton.MouseButton1Click:Connect(function()
+					setclipboard(GamePlaceId)
+					PlaceIdButton.Text = "✓ Copied!"
+					task.wait(0.3)
+					PlaceIdButton.Text = "Copy Place ID: " .. GamePlaceId
+				end)
+				GameLinkButton.MouseButton1Click:Connect(function()
+					setclipboard(GameLink)
+					GameLinkButton.Text = "✓ Copied!"
+					task.wait(0.3)
+					GameLinkButton.Text = "Copy Game Link"
+				end)
+				function SettingFuncs:Set(NewConfig)
+					GamePlaceId = NewConfig[1] or NewConfig.GamePlaceId or ""
+					GameLink = NewConfig[2] or NewConfig.GameLink or ""
+					PlaceIdButton.Text = "Copy Place ID: " .. GamePlaceId
+					UpdateSizeSection()
+				end
+				ItemCount += 1
+				return SettingFuncs
 			end
 			function Item:AddButton(Config)
-				local Title = Config[1] or Config.Title or ""
-				local Content = Config[2] or Config.Content or ""
-				local Icon = Config[3] or Config.Icon or "rbxassetid://7734010488"
+				local BTitle = Config[1] or Config.Title or ""
+				local BContent = Config[2] or Config.Content or ""
+				local BIcon = Config[3] or Config.Icon or "rbxassetid://7734010488"
 				local Callback = Config[4] or Config.Callback or function()
 				end
-				local Funcs_Button = {}
 				local Button = Custom:Create("Frame", {
 					Name = "Button",
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
@@ -1123,10 +1364,10 @@ function PROTONUI:CreateWindow(Config)
 				Custom:Create("UICorner", {
 					CornerRadius = UDim.new(0, 4)
 				}, Button)
-				Custom:Create("TextLabel", {
+				local ButtonTitle = Custom:Create("TextLabel", {
 					Name = "ButtonTitle",
 					Font = Enum.Font.GothamBold,
-					Text = Title,
+					Text = BTitle,
 					TextColor3 = Color3.fromRGB(231, 231, 231),
 					TextSize = 13,
 					TextXAlignment = Enum.TextXAlignment.Left,
@@ -1140,7 +1381,7 @@ function PROTONUI:CreateWindow(Config)
 				local ButtonContent = Custom:Create("TextLabel", {
 					Name = "ButtonContent",
 					Font = Enum.Font.GothamBold,
-					Text = Content,
+					Text = BContent,
 					TextColor3 = Color3.fromRGB(255, 255, 255),
 					TextSize = 12,
 					TextTransparency = 0.6,
@@ -1187,7 +1428,7 @@ function PROTONUI:CreateWindow(Config)
 				}, Button)
 				Custom:Create("ImageLabel", {
 					Name = "FeatureImg",
-					Image = Icon,
+					Image = BIcon,
 					AnchorPoint = Vector2.new(0.5, 0.5),
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 					BackgroundTransparency = 0.999,
@@ -1200,11 +1441,11 @@ function PROTONUI:CreateWindow(Config)
 					Callback()
 				end)
 				ItemCount += 1
-				return Funcs_Button
+				return {}
 			end
 			function Item:AddToggle(Config)
-				local Title = Config[1] or Config.Title or ""
-				local Content = Config[2] or Config.Content or ""
+				local TTitle = Config[1] or Config.Title or ""
+				local TContent = Config[2] or Config.Content or ""
 				local Default = Config[3] or Config.Default or false
 				local Callback = Config[4] or Config.Callback or function()
 				end
@@ -1225,7 +1466,7 @@ function PROTONUI:CreateWindow(Config)
 				local ToggleTitle = Custom:Create("TextLabel", {
 					Name = "ToggleTitle",
 					Font = Enum.Font.GothamBold,
-					Text = Title,
+					Text = TTitle,
 					TextSize = 13,
 					TextColor3 = Color3.fromRGB(231, 231, 231),
 					TextXAlignment = Enum.TextXAlignment.Left,
@@ -1239,7 +1480,7 @@ function PROTONUI:CreateWindow(Config)
 				local ToggleContent = Custom:Create("TextLabel", {
 					Name = "ToggleContent",
 					Font = Enum.Font.GothamBold,
-					Text = Content,
+					Text = TContent,
 					TextSize = 12,
 					TextColor3 = Color3.fromRGB(255, 255, 255),
 					TextTransparency = 0.6,
@@ -1320,7 +1561,7 @@ function PROTONUI:CreateWindow(Config)
 						Transparency = StrokeTransparency
 					}):Play()
 					TweenService:Create(FeatureFrame2, tweenInfo, {
-						BackgroundColor3 = FrameColor,
+						Background3 = FrameColor,
 						BackgroundTransparency = FrameTransparency
 					}):Play()
 				end
@@ -1338,11 +1579,11 @@ function PROTONUI:CreateWindow(Config)
 				return Funcs_Toggle
 			end
 			function Item:AddSlider(Config)
-				local Title = Config[1] or Config.Title or ""
-				local Content = Config[2] or Config.Content or ""
+				local SldTitle = Config[1] or Config.Title or ""
+				local SldContent = Config[2] or Config.Content or ""
 				local Increment = Config[3] or Config.Increment or 1
-				local Min = Config[4] or Config.Min or 0
-				local Max = Config[5] or Config.Max or 100
+				local MinVal = Config[4] or Config.Min or 0
+				local MaxVal = Config[5] or Config.Max or 100
 				local Default = Config[6] or Config.Default or 50
 				local Callback = Config[7] or Config.Callback or function()
 				end
@@ -1351,7 +1592,7 @@ function PROTONUI:CreateWindow(Config)
 				}
 				local Slider = Custom:Create("Frame", {
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-					BackgroundTransparency = 0.9350000023841858,
+					BackgroundTransparency = 0.935,
 					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					LayoutOrder = ItemCount,
@@ -1359,18 +1600,17 @@ function PROTONUI:CreateWindow(Config)
 					Name = "Slider",
 				}, SectionAdd)
 				Custom:Create("UICorner", {
-					CornerRadius = UDim.new(0, 4),
+					CornerRadius = UDim.new(0, 4)
 				}, Slider)
-				Custom:Create("TextLabel", {
+				local SliderTitle = Custom:Create("TextLabel", {
 					Font = Enum.Font.GothamBold,
-					Text = Title,
+					Text = SldTitle,
 					TextColor3 = Color3.fromRGB(230, 230, 230),
 					TextSize = 13,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					TextYAlignment = Enum.TextYAlignment.Top,
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-					BackgroundTransparency = 0.9990000128746033,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
+					BackgroundTransparency = 0.999,
 					BorderSizePixel = 0,
 					Position = UDim2.new(0, 10, 0, 10),
 					Size = UDim2.new(1, - 180, 0, 13),
@@ -1378,15 +1618,14 @@ function PROTONUI:CreateWindow(Config)
 				}, Slider)
 				local SliderContent = Custom:Create("TextLabel", {
 					Font = Enum.Font.GothamBold,
-					Text = Content,
+					Text = SldContent,
 					TextColor3 = Color3.fromRGB(255, 255, 255),
 					TextSize = 12,
-					TextTransparency = 0.6000000238418579,
+					TextTransparency = 0.6,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					TextYAlignment = Enum.TextYAlignment.Bottom,
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-					BackgroundTransparency = 0.9990000128746033,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
+					BackgroundTransparency = 0.999,
 					BorderSizePixel = 0,
 					Position = UDim2.new(0, 10, 0, 23),
 					Size = UDim2.new(1, - 180, 0, 12),
@@ -1406,14 +1645,13 @@ function PROTONUI:CreateWindow(Config)
 				local SliderInput = Custom:Create("Frame", {
 					AnchorPoint = Vector2.new(0, 0.5),
 					BackgroundColor3 = Custom.ColorRGB,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					Position = UDim2.new(1, - 155, 0.5, 0),
 					Size = UDim2.new(0, 28, 0, 20),
 					Name = "SliderInput",
 				}, Slider)
 				Custom:Create("UICorner", {
-					CornerRadius = UDim.new(0, 2),
+					CornerRadius = UDim.new(0, 2)
 				}, SliderInput)
 				local TextBox = Custom:Create("TextBox", {
 					Font = Enum.Font.GothamBold,
@@ -1422,8 +1660,7 @@ function PROTONUI:CreateWindow(Config)
 					TextSize = 13,
 					TextWrapped = true,
 					BackgroundColor3 = Color3.fromRGB(0, 0, 0),
-					BackgroundTransparency = 0.9990000128746033,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
+					BackgroundTransparency = 0.999,
 					BorderSizePixel = 0,
 					Position = UDim2.new(0, - 1, 0, 0),
 					Size = UDim2.new(1, 0, 1, 0),
@@ -1431,8 +1668,7 @@ function PROTONUI:CreateWindow(Config)
 				local SliderFrame = Custom:Create("Frame", {
 					AnchorPoint = Vector2.new(1, 0.5),
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-					BackgroundTransparency = 0.800000011920929,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
+					BackgroundTransparency = 0.8,
 					BorderSizePixel = 0,
 					Position = UDim2.new(1, - 20, 0.5, 0),
 					Size = UDim2.new(0, 100, 0, 3),
@@ -1442,17 +1678,15 @@ function PROTONUI:CreateWindow(Config)
 				local SliderDraggable = Custom:Create("Frame", {
 					AnchorPoint = Vector2.new(0, 0.5),
 					BackgroundColor3 = Custom.ColorRGB,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					Position = UDim2.new(0, 0, 0.5, 0),
-					Size = UDim2.new(0.899999976, 0, 0, 1),
+					Size = UDim2.new(0.9, 0, 0, 1),
 					Name = "SliderDraggable",
 				}, SliderFrame)
 				Custom:Create("UICorner", {}, SliderDraggable)
 				local SliderCircle = Custom:Create("Frame", {
 					AnchorPoint = Vector2.new(1, 0.5),
 					BackgroundColor3 = Custom.ColorRGB,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					Position = UDim2.new(1, 4, 0.5, 0),
 					Size = UDim2.new(0, 12, 0, 12),
@@ -1460,7 +1694,7 @@ function PROTONUI:CreateWindow(Config)
 				}, SliderDraggable)
 				Custom:Create("UICorner", {}, SliderCircle)
 				Custom:Create("UIStroke", {
-					Color = Custom.ColorRGB,
+					Color = Custom.ColorRGB
 				}, SliderCircle)
 				local Dragging = false
 				local function Round(Number, Factor)
@@ -1471,11 +1705,11 @@ function PROTONUI:CreateWindow(Config)
 					return Result
 				end
 				function Funcs_Slider:Set(Value)
-					Value = math.clamp(Round(Value, Increment), Min, Max)
+					Value = math.clamp(Round(Value, Increment), MinVal, MaxVal)
 					Funcs_Slider.Value = Value
 					TextBox.Text = tostring(Value)
 					TweenService:Create(SliderDraggable, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-						Size = UDim2.fromScale((Value - Min) / (Max - Min), 1)
+						Size = UDim2.fromScale((Value - MinVal) / (MaxVal - MinVal), 1)
 					}):Play()
 				end
 				SliderFrame.InputBegan:Connect(function(Input)
@@ -1496,14 +1730,14 @@ function PROTONUI:CreateWindow(Config)
 						if CurrPosX ~= _LastX then
 							_LastX = CurrPosX
 							local SizeScale = math.clamp((CurrPosX - SliderFrame.AbsolutePosition.X) / SliderFrame.AbsoluteSize.X, 0, 1)
-							Funcs_Slider:Set(Min + ((Max - Min) * SizeScale))
+							Funcs_Slider:Set(MinVal + ((MaxVal - MinVal) * SizeScale))
 						end
 					end
 				end)
 				TextBox:GetPropertyChangedSignal("Text"):Connect(function()
 					local Valid = TextBox.Text:gsub("[^%d]", "")
 					if Valid ~= "" then
-						local ValidNumber = math.min(tonumber(Valid), Max)
+						local ValidNumber = math.min(tonumber(Valid), MaxVal)
 						TextBox.Text = tostring(ValidNumber)
 					else
 						TextBox.Text = "0"
@@ -1512,11 +1746,10 @@ function PROTONUI:CreateWindow(Config)
 				TextBox.FocusLost:Connect(function()
 					if TextBox.Text ~= "" then
 						Funcs_Slider:Set(tonumber(TextBox.Text))
-						Callback(Funcs_Slider.Value)
 					else
 						Funcs_Slider:Set(0)
-						Callback(Funcs_Slider.Value)
 					end
+					Callback(Funcs_Slider.Value)
 				end)
 				Funcs_Slider:Set(tonumber(Default))
 				Callback(Funcs_Slider.Value)
@@ -1524,8 +1757,8 @@ function PROTONUI:CreateWindow(Config)
 				return Funcs_Slider
 			end
 			function Item:AddInput(Config)
-				local Title = Config[1] or Config.Title or ""
-				local Content = Config[2] or Config.Content or ""
+				local InpTitle = Config[1] or Config.Title or ""
+				local InpContent = Config[2] or Config.Content or ""
 				local Default = Config[3] or Config.Default or ""
 				local Callback = Config[4] or Config.Callback or function()
 				end
@@ -1535,25 +1768,23 @@ function PROTONUI:CreateWindow(Config)
 				local Input = Custom:Create("Frame", {
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 					BackgroundTransparency = 0.935,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					LayoutOrder = ItemCount,
 					Size = UDim2.new(1, 0, 0, 35),
 					Name = "Input",
 				}, SectionAdd)
 				Custom:Create("UICorner", {
-					CornerRadius = UDim.new(0, 4),
+					CornerRadius = UDim.new(0, 4)
 				}, Input)
 				local InputTitle = Custom:Create("TextLabel", {
 					Font = Enum.Font.GothamBold,
-					Text = Title,
+					Text = InpTitle,
 					TextColor3 = Color3.fromRGB(230, 230, 230),
 					TextSize = 13,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					TextYAlignment = Enum.TextYAlignment.Top,
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 					BackgroundTransparency = 0.999,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					Position = UDim2.new(0, 10, 0, 10),
 					Size = UDim2.new(1, - 180, 0, 13),
@@ -1561,7 +1792,7 @@ function PROTONUI:CreateWindow(Config)
 				}, Input)
 				local InputContent = Custom:Create("TextLabel", {
 					Font = Enum.Font.GothamBold,
-					Text = Content,
+					Text = InpContent,
 					TextColor3 = Color3.fromRGB(255, 255, 255),
 					TextSize = 12,
 					TextTransparency = 0.6,
@@ -1570,7 +1801,6 @@ function PROTONUI:CreateWindow(Config)
 					TextYAlignment = Enum.TextYAlignment.Bottom,
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 					BackgroundTransparency = 0.999,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					Position = UDim2.new(0, 10, 0, 23),
 					Size = UDim2.new(1, - 180, 0, 12),
@@ -1594,7 +1824,6 @@ function PROTONUI:CreateWindow(Config)
 					AnchorPoint = Vector2.new(1, 0.5),
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 					BackgroundTransparency = 0.95,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					ClipsDescendants = true,
 					Position = UDim2.new(1, - 7, 0.5, 0),
@@ -1616,7 +1845,6 @@ function PROTONUI:CreateWindow(Config)
 					AnchorPoint = Vector2.new(0, 0.5),
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 					BackgroundTransparency = 0.999,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					Position = UDim2.new(0, 5, 0.5, 0),
 					Size = UDim2.new(1, - 10, 1, - 8),
@@ -1635,8 +1863,8 @@ function PROTONUI:CreateWindow(Config)
 				return Funcs_Input
 			end
 			function Item:AddDropdown(Config)
-				local Title = Config[1] or Config.Title or ""
-				local Content = Config[2] or Config.Content or ""
+				local DTitle = Config[1] or Config.Title or ""
+				local DContent = Config[2] or Config.Content or ""
 				local Multi = Config[3] or Config.Multi or false
 				local Options = Config[4] or Config.Options or {}
 				local Default = Config[5] or Config.Default or {}
@@ -1649,7 +1877,6 @@ function PROTONUI:CreateWindow(Config)
 				local Dropdown = Custom:Create("Frame", {
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 					BackgroundTransparency = 0.935,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					LayoutOrder = ItemCount,
 					Size = UDim2.new(1, 0, 0, 35),
@@ -1662,7 +1889,6 @@ function PROTONUI:CreateWindow(Config)
 					TextSize = 14,
 					BackgroundColor3 = Color3.fromRGB(0, 0, 0),
 					BackgroundTransparency = 0.999,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					Size = UDim2.new(1, 0, 1, 0),
 					Name = "ToggleButton"
@@ -1672,14 +1898,13 @@ function PROTONUI:CreateWindow(Config)
 				}, Dropdown)
 				local DropdownTitle = Custom:Create("TextLabel", {
 					Font = Enum.Font.GothamBold,
-					Text = Title,
+					Text = DTitle,
 					TextColor3 = Color3.fromRGB(230, 230, 230),
 					TextSize = 13,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					TextYAlignment = Enum.TextYAlignment.Top,
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 					BackgroundTransparency = 0.999,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					Position = UDim2.new(0, 10, 0, 10),
 					Size = UDim2.new(1, - 180, 0, 13),
@@ -1688,7 +1913,7 @@ function PROTONUI:CreateWindow(Config)
 				})
 				local DropdownContent = Custom:Create("TextLabel", {
 					Font = Enum.Font.GothamBold,
-					Text = Content,
+					Text = DContent,
 					TextColor3 = Color3.fromRGB(255, 255, 255),
 					TextSize = 12,
 					TextTransparency = 0.6,
@@ -1697,7 +1922,6 @@ function PROTONUI:CreateWindow(Config)
 					TextYAlignment = Enum.TextYAlignment.Bottom,
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 					BackgroundTransparency = 0.999,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					Position = UDim2.new(0, 10, 0, 23),
 					Size = UDim2.new(1, - 180, 0, 12),
@@ -1718,7 +1942,6 @@ function PROTONUI:CreateWindow(Config)
 					AnchorPoint = Vector2.new(1, 0.5),
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 					BackgroundTransparency = 0.95,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					Position = UDim2.new(1, - 7, 0.5, 0),
 					Size = UDim2.new(0, 148, 0, 30),
@@ -1733,14 +1956,12 @@ function PROTONUI:CreateWindow(Config)
 						MoreBlur.Visible = true
 						local tweenInfo = TweenInfo.new(0.1)
 						DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
-						local BlurTween = TweenService:Create(MoreBlur, tweenInfo, {
+						TweenService:Create(MoreBlur, tweenInfo, {
 							BackgroundTransparency = 0.7
-						})
-						local DropdownTween = TweenService:Create(DropdownSelect, tweenInfo, {
+						}):Play()
+						TweenService:Create(DropdownSelect, tweenInfo, {
 							Position = UDim2.new(1, - 11, 0.5, 0)
-						})
-						BlurTween:Play()
-						DropdownTween:Play()
+						}):Play()
 					end
 				end)
 				local OptionSelecting = Custom:Create("TextLabel", {
@@ -1754,19 +1975,17 @@ function PROTONUI:CreateWindow(Config)
 					AnchorPoint = Vector2.new(0, 0.5),
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 					BackgroundTransparency = 0.999,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					Position = UDim2.new(0, 5, 0.5, 0),
 					Size = UDim2.new(1, - 30, 1, - 8),
 					Name = "OptionSelecting",
 				}, SelectOptionsFrame)
-				local OptionImg = Custom:Create("ImageLabel", {
+				Custom:Create("ImageLabel", {
 					Image = "rbxassetid://90200523188815",
 					ImageColor3 = Color3.fromRGB(231, 231, 231),
 					AnchorPoint = Vector2.new(1, 0.5),
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 					BackgroundTransparency = 0.999,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					Position = UDim2.new(1, 0, 0.5, 0),
 					Size = UDim2.new(0, 25, 0, 25),
@@ -1774,20 +1993,18 @@ function PROTONUI:CreateWindow(Config)
 				}, SelectOptionsFrame)
 				local ScrollSelect = Custom:Create("ScrollingFrame", {
 					CanvasSize = UDim2.new(0, 0, 0, 0),
-					ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0),
 					ScrollBarThickness = 0,
 					Active = true,
 					LayoutOrder = CountDropdown,
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 					BackgroundTransparency = 0.999,
-					BorderColor3 = Color3.fromRGB(0, 0, 0),
 					BorderSizePixel = 0,
 					Size = UDim2.new(1, 0, 1, 0),
 					Name = "ScrollSelect",
 				}, DropdownFolder)
 				Custom:Create("UIListLayout", {
 					Padding = UDim.new(0, 3),
-					SortOrder = Enum.SortOrder.LayoutOrder,
+					SortOrder = Enum.SortOrder.LayoutOrder
 				}, ScrollSelect)
 				local SearchBar = Custom:Create("TextBox", {
 					Font = Enum.Font.GothamBold,
@@ -1854,7 +2071,6 @@ function PROTONUI:CreateWindow(Config)
 					local Option = Custom:Create("Frame", {
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 						BackgroundTransparency = 0.999,
-						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						LayoutOrder = DropCount,
 						Size = UDim2.new(1, 0, 0, 30),
@@ -1871,7 +2087,6 @@ function PROTONUI:CreateWindow(Config)
 						TextXAlignment = Enum.TextXAlignment.Left,
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 						BackgroundTransparency = 0.999,
-						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						Size = UDim2.new(1, 0, 1, 0),
 						Name = "OptionButton"
@@ -1885,7 +2100,6 @@ function PROTONUI:CreateWindow(Config)
 						TextYAlignment = Enum.TextYAlignment.Top,
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 						BackgroundTransparency = 0.999,
-						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						Position = UDim2.new(0, 8, 0, 8),
 						Size = UDim2.new(1, - 100, 0, 13),
@@ -1894,7 +2108,6 @@ function PROTONUI:CreateWindow(Config)
 					local ChooseFrame = Custom:Create("Frame", {
 						AnchorPoint = Vector2.new(0, 0.5),
 						BackgroundColor3 = Custom.ColorRGB,
-						BorderColor3 = Color3.fromRGB(0, 0, 0),
 						BorderSizePixel = 0,
 						Position = UDim2.new(0, 2, 0.5, 0),
 						Size = UDim2.new(0, 0, 0, 0),
@@ -1956,152 +2169,15 @@ function PROTONUI:CreateWindow(Config)
 				CountDropdown += 1
 				return Funcs_Dropdown
 			end
-			ItemCount += 1
+			CountSection += 1
 			return Item
 		end
 		CountTab += 1
 		return Sections
 	end
-	local THEMES = {
-		["Proton"] = {
-			accent = Color3.fromRGB(59, 226, 205),
-			bg = Color3.fromRGB(13, 41, 39),
-			snowFalling = false
-		},
-		["Snow"] = {
-			accent = Color3.fromRGB(224, 224, 224),
-			bg = Color3.fromRGB(200, 200, 200),
-			snowFalling = false
-		},
-		["Sunset"] = {
-			accent = Color3.fromRGB(255, 107, 53),
-			bg = Color3.fromRGB(26, 15, 10),
-			snowFalling = false
-		},
-		["Ocean"] = {
-			accent = Color3.fromRGB(0, 150, 200),
-			bg = Color3.fromRGB(10, 30, 50),
-			snowFalling = false
-		},
-		["Forest"] = {
-			accent = Color3.fromRGB(76, 175, 80),
-			bg = Color3.fromRGB(15, 35, 20),
-			snowFalling = false
-		},
-		["Midnight"] = {
-			accent = Color3.fromRGB(138, 43, 226),
-			bg = Color3.fromRGB(20, 10, 35),
-			snowFalling = false
-		},
-		["Lava"] = {
-			accent = Color3.fromRGB(255, 69, 0),
-			bg = Color3.fromRGB(40, 10, 5),
-			snowFalling = false
-		},
-		["AMOLED BLACK"] = {
-			accent = Color3.fromRGB(255, 255, 255),
-			bg = Color3.fromRGB(0, 0, 0),
-			snowFalling = false
-		},
-		["Snow Custom Theme"] = {
-			accent = Color3.fromRGB(135, 206, 250),
-			bg = Color3.fromRGB(25, 25, 112),
-			snowFalling = true
-		},
-		["Johny Custom Theme"] = {
-			accent = Color3.fromRGB(88, 0, 216),
-			bg = Color3.fromRGB(157, 90, 255),
-			snowFalling = false
-		}
-	}
-	local FONTSTABLE = {
-		["GothamBold"] = Enum.Font.GothamBold,
-		["Gotham"] = Enum.Font.Gotham,
-		["Arial"] = Enum.Font.Arial,
-		["ArialBold"] = Enum.Font.ArialBold,
-		["Oswald"] = Enum.Font.Oswald,
-		["Ubuntu"] = Enum.Font.Ubuntu,
-	}
-	local function applyTheme(accent, bg)
-		Custom.ColorRGB = accent
-		Custom.BackgroundRGB = bg
-		local function updateAllAccents(parent)
-			for _, v in pairs(parent:GetDescendants()) do
-				if v.Name == "TextLabel1" then
-					v.TextColor3 = accent
-					local stroke = v:FindFirstChild("UIStroke")
-					if stroke then
-						stroke.Color = accent
-					end
-				elseif v.Name == "ChooseFrame" or v.Name == "SliderInput" or v.Name == "SliderDraggable" or v.Name == "SliderCircle" then
-					v.BackgroundColor3 = accent
-					local stroke = v:FindFirstChild("UIStroke")
-					if stroke then
-						stroke.Color = accent
-					end
-				elseif v.Name == "SectionDecideFrame" then
-					local gradient = v:FindFirstChild("UIGradient")
-					if gradient then
-						gradient.Color = ColorSequence.new{
-							ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 20, 20)),
-							ColorSequenceKeypoint.new(0.5, accent),
-							ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 20))
-						}
-					end
-				elseif v.Name == "Main" or v.Name == "DropdownSelect" then
-					v.BackgroundColor3 = bg
-				end
-			end
-		end
-		updateAllAccents(ProtonUIGui)
-	end
-	local function applySnowFalling(shouldSnow)
-		local Main = ProtonUIGui:FindFirstChild("DropShadowHolder"):FindFirstChild("DropShadow"):FindFirstChild("Main")
-		if not Main then
-			return
-		end
-		local existingSnow = Main:FindFirstChild("SnowContainer")
-		if existingSnow then
-			existingSnow:Destroy()
-		end
-		if shouldSnow then
-			local SnowContainer = Custom:Create("Frame", {
-				Name = "SnowContainer",
-				BackgroundTransparency = 1,
-				BorderSizePixel = 0,
-				Size = UDim2.new(1, 0, 1, 0),
-				ZIndex = 1,
-				Parent = Main
-			})
-			for i = 1, 28 do
-				local snowflake = Custom:Create("TextLabel", {
-					Text = "❄",
-					TextSize = math.random(10, 20),
-					TextColor3 = Color3.fromRGB(200, 220, 255),
-					BackgroundTransparency = 1,
-					BorderSizePixel = 0,
-					Position = UDim2.new(math.random(0, 100) / 100, 0, - 0.1, 0),
-					Size = UDim2.new(0, 30, 0, 30),
-					ZIndex = 2,
-					Parent = SnowContainer
-				})
-				task.spawn(function()
-					while SnowContainer and SnowContainer.Parent do
-						local tweenInfo = TweenInfo.new(math.random(4, 10), Enum.EasingStyle.Linear)
-						local tween = TweenService:Create(snowflake, tweenInfo, {
-							Position = UDim2.new(math.random(0, 100) / 100, 0, 1.1, 0)
-						})
-						tween:Play()
-						tween.Completed:Wait()
-						snowflake.Position = UDim2.new(math.random(0, 100) / 100, 0, - 0.1, 0)
-					end
-				end)
-			end
-		end
-	end
-	function PROTONUI:MakeSettingsTab(usageTab)
+	function WindowFunctions:MakeSettingsTab(usageTab)
 		local UIChangerSection = usageTab:AddSection("UI Settings", true)
-		local themechangerdd = UIChangerSection:AddDropdown({
+		UIChangerSection:AddDropdown({
 			"Change Theme",
 			"This allows you to change the theme and colors of the UI",
 			false,
@@ -2129,7 +2205,7 @@ function PROTONUI:CreateWindow(Config)
 				end
 			end
 		})
-		local fontchangerdd = UIChangerSection:AddDropdown({
+		UIChangerSection:AddDropdown({
 			"Font Changer",
 			"This changes the font to the UI",
 			false,
@@ -2148,18 +2224,15 @@ function PROTONUI:CreateWindow(Config)
 				local selectedFont = selectedOptions[1] or "GothamBold"
 				local fontEnum = FONTSTABLE[selectedFont]
 				if fontEnum then
-					local function updateAllFonts(parent)
-						for _, v in pairs(parent:GetDescendants()) do
-							if v:IsA("TextLabel") or v:IsA("TextButton") or v:IsA("TextBox") then
-								v.Font = fontEnum
-							end
+					for _, v in pairs(ProtonUIGui:GetDescendants()) do
+						if v:IsA("TextLabel") or v:IsA("TextButton") or v:IsA("TextBox") then
+							v.Font = fontEnum
 						end
 					end
-					updateAllFonts(ProtonUIGui)
 				end
 			end
 		})
 	end
-	return Tabs
+	return WindowFunctions
 end
 return PROTONUI
