@@ -2132,10 +2132,10 @@ function PROTONUI:CreateWindow(Config)
         local uitransSlider = UIChangerSection:AddSlider({
             "UI Transparency",
             "Change the transparency of the UI",
-            Increment = 0.1,
-            Min = 0,
-            Max = 1,
-            Default = 0.1,
+            0.1,
+            0,
+            1,
+            0.1,
             function(val)
                 Main.BackgroundTransparency = val
             end
