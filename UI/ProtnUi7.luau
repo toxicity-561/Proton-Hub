@@ -2129,6 +2129,17 @@ function PROTONUI:CreateWindow(Config)
 				end
 			end
 		})
+        local uitransSlider = UIChangerSection:AddSlider({
+            "UI Transparency",
+            "Change the transparency of the UI",
+            0.1,
+            0,
+            1,
+            0.1
+            function(val)
+                Main.BackgroundTransparency = val
+            end
+        })
 		local fontchangerdd = UIChangerSection:AddDropdown({
 			"Font Changer",
 			"This changes the font to the UI",
