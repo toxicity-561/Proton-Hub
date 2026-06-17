@@ -2135,7 +2135,7 @@ function PROTONUI:CreateWindow(Config)
             0.1,
             0,
             1,
-            0.1
+            0.1,
             function(val)
                 Main.BackgroundTransparency = val
             end
