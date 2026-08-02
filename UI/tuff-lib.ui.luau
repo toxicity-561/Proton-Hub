@@ -116,15 +116,15 @@ window.Selectable = true
 window.Size = UDim2.new(0, 200, 0, 200)
 window.ScaleType = Enum.ScaleType.Slice
 window.SliceCenter = Rect.new(12, 12, 12, 12)
-local http = game:GetService("HttpService")
-local image_url = "https://raw.githubusercontent.com/toxicity-561/images/refs/heads/main/request-to-make-this-tuff-photo-a-live-wallapaper-v0-qcan5a8nwrof1.jpeg"
-local success, image_data = pcall(function()
-	return http:GetAsync(image_url)
-end)
-if success and image_data then
-	writefile("custom_window_texture.png", image_data)
-	window.Image = "custom_window_texture.png"
+local folder = "uiconfigskillingpaid"
+local file = folder.."/bg.png"
+local url = "https://raw.githubusercontent.com/toxicity-561/images/refs/heads/main/request-to-make-this-tuff-photo-a-live-wallapaper-v0-qcan5a8nwrof1.jpeg"
+if not isfolder(folder) then makefolder(folder) end
+if not isfile(file) then
+    writefile(file, game:HttpGet(url))
 end
+local asset = getcustomasset(file)
+window.Image = asset
 
 resizer.Name = "Resizer"
 resizer.Parent = window
