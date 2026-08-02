@@ -105,16 +105,6 @@ label.TextColor3 = Color3.new(1, 1, 1)
 label.TextSize = 14
 label.TextXAlignment = Enum.TextXAlignment.Left
 
-local http = game:GetService("HttpService")
-local image_url = "https://raw.githubusercontent.com/toxicity-561/images/refs/heads/main/request-to-make-this-tuff-photo-a-live-wallapaper-v0-qcan5a8nwrof1.jpeg"
-local image_data = http:GetAsync(image_url)
-local encoded = game:GetService("HttpService"):JSONEncode({data = game:GetService("HttpService"):Base64Encode(image_data)})
-writefile("custom_window_texture.json", encoded)
-local decoded_data = game:GetService("HttpService"):JSONDecode(readfile("custom_window_texture.json"))
-local image_bytes = game:GetService("HttpService"):Base64Decode(decoded_data.data)
-writefile("custom_window_texture.png", image_bytes)
-local custom_image_path = getcwd() .. "\\custom_window_texture.png"
-
 window.Name = "Window"
 window.Parent = prefabs
 window.Active = true
@@ -124,9 +114,17 @@ window.ClipsDescendants = true
 window.Position = UDim2.new(0, 20, 0, 20)
 window.Selectable = true
 window.Size = UDim2.new(0, 200, 0, 200)
-window.Image = custom_image_path
 window.ScaleType = Enum.ScaleType.Slice
 window.SliceCenter = Rect.new(12, 12, 12, 12)
+local http = game:GetService("HttpService")
+local image_url = "https://raw.githubusercontent.com/toxicity-561/images/refs/heads/main/request-to-make-this-tuff-photo-a-live-wallapaper-v0-qcan5a8nwrof1.jpeg"
+local success, image_data = pcall(function()
+	return http:GetAsync(image_url)
+end)
+if success and image_data then
+	writefile("custom_window_texture.png", image_data)
+	window.Image = "custom_window_texture.png"
+end
 
 resizer.Name = "Resizer"
 resizer.Parent = window
